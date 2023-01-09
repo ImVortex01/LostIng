@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "138576711774",
+    "project_id": "losting2-0",
+    "storage_bucket": "losting2-0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:138576711774:android:c55ec5074adf7ee1dea4cf",
+        "android_client_info": {
+          "package_name": "com.example.losting20"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "138576711774-l4ut7poa5i8gvfm6uu9gmhreee9301e6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCnrNgXQYmyyRF3euQo7slzk_SoVWc2s1Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "138576711774-l4ut7poa5i8gvfm6uu9gmhreee9301e6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
