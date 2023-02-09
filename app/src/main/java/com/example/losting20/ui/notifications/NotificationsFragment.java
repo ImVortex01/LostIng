@@ -13,7 +13,6 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.example.losting20.API.ValenBisiAPI;
 import com.example.losting20.Incidencia;
@@ -49,7 +48,7 @@ public class NotificationsFragment extends Fragment {
     private final DatabaseReference base = FirebaseDatabase.getInstance().getReference();
     private final DatabaseReference users = base.child("users");
     private final DatabaseReference uid = users.child(auth.getUid());
-    private final DatabaseReference incidencies = uid.child("incidencies");
+    private final DatabaseReference incidencies = uid.child("reportes");
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -59,7 +58,6 @@ public class NotificationsFragment extends Fragment {
 
         binding = FragmentNotificationsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-
         return root;
     }//onCreateView
 

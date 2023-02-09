@@ -35,6 +35,17 @@ public class Incidencia {
         return direccio;
     }
 
+    @Override
+    public String toString() {
+        return "Incidencia{" +
+                "latitud='" + latitud + '\'' +
+                ", longitud='" + longitud + '\'' +
+                ", direccio='" + direccio + '\'' +
+                ", problema='" + problema + '\'' +
+                ", url='" + url + '\'' +
+                '}';
+    }
+
     public void setDireccio(String direccio) {
         this.direccio = direccio;
     }
@@ -47,25 +58,4 @@ public class Incidencia {
         this.problema = problema;
     }
 
-    @Override
-    public String toString() {
-        return "Incidencia{" +
-                "latitud='" + latitud + '\'' +
-                ", longitud='" + longitud + '\'' +
-                ", direccio='" + direccio + '\'' +
-                ", problema='" + problema + '\'' +
-                ", url='" + url + '\'' +
-                '}';
-    }
-
-    public Incidencia(String latitud, String longitud, String direccio, String problema, String url) {
-        this.latitud = latitud;
-        this.longitud = longitud;
-        this.direccio = direccio;
-        this.problema = problema;
-        this.url = url;
-    }
-
-    public Incidencia() {
-    }
 }

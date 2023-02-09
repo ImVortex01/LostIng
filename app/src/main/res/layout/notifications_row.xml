@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/txtDescripcio"
+        android:layout_width="158dp"
+        android:layout_height="28dp"
+        android:background="#33393939"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:minLines="1"
+        android:text="TextView"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/txtAdreca"
+        android:layout_width="110dp"
+        android:layout_height="31dp"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:minLines="1"
+        android:text="TextView"
+        app:layout_constraintEnd_toEndOf="@+id/txtDescripcio"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/txtDescripcio"
+        app:layout_constraintTop_toBottomOf="@+id/txtDescripcio" />
+
+    <ImageView
+        android:id="@+id/ivArticulo"
+        android:layout_width="131dp"
+        android:layout_height="114dp"
+        android:layout_marginTop="4dp"
+        app:layout_constraintEnd_toEndOf="@+id/txtAdreca"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/txtAdreca"
+        app:layout_constraintTop_toBottomOf="@+id/txtAdreca"
+        app:srcCompat="@drawable/ic_baseline_photo_size_select_actual_24" />
+</androidx.constraintlayout.widget.ConstraintLayout>

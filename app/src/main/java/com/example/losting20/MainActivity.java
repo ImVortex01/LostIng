@@ -6,14 +6,10 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Button;
-import android.widget.EditText;
-
-import com.firebase.ui.auth.AuthUI;
-import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -24,6 +20,11 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.example.losting20.databinding.ActivityMainBinding;
+import com.firebase.ui.auth.AuthUI;
+import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -60,6 +61,23 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(binding.navView, navController);
         //======================================
         sharedViewModel = new ViewModelProvider(this).get(SharedViewModel.class);
+
+        FusedLocationProviderClient mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        sharedViewModel.setFusedLocationClient(mFusedLocationClient);
+
+        sharedViewModel.getCheckPermission().observe(this, s -> checkPermission());
+
+        locationPermissionRequest = registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), result -> {
+            Boolean fineLocationGranted = result.getOrDefault(Manifest.permission.ACCESS_FINE_LOCATION, false);
+            Boolean coarseLocationGranted = result.getOrDefault(Manifest.permission.ACCESS_COARSE_LOCATION, false);
+            if (fineLocationGranted != null && fineLocationGranted) {
+                sharedViewModel.startTrackingLocation(false);
+            } else if (coarseLocationGranted != null && coarseLocationGranted) {
+                sharedViewModel.startTrackingLocation(false);
+            } else {
+                Toast.makeText(this, "No concedeixen permisos", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         signInLauncher = registerForActivityResult(
                 new FirebaseAuthUIActivityResultContract(),
@@ -107,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
                     Manifest.permission.ACCESS_COARSE_LOCATION
             });
         } else {
-            //  sharedViewModel.startTrackingLocation(false);
+            sharedViewModel.startTrackingLocation(false);
             Log.e("Check permisions else", "else");
         }
     }//CheckPermision
