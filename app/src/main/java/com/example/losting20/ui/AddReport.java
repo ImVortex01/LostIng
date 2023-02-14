@@ -56,20 +56,17 @@ import java.util.concurrent.Executors;
 
 public class AddReport extends Fragment {
 
-    private @NonNull FragmentAddReportBinding binding;
+    private FragmentAddReportBinding binding;
 
     private FirebaseUser authUser;
-    private int PERMISSION_REQUEST_CODE=1;
     public static int RESULT_LOAD_IMG=2;
     public StorageReference storageRef;
     private String randomName;
     private StorageReference ref;
-    private String imgDecodableString;
-    private String mCurrentPhotoPath;
     private Uri photoURI;
-    private ImageView iv;
     private String calle;
     private Boolean bimgen = false;
+
 
     public AddReport() {
 
@@ -89,7 +86,7 @@ public class AddReport extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         HomeViewModel homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
@@ -117,7 +114,7 @@ public class AddReport extends Fragment {
                 incidencia.setDireccio(fetchAddress().toString());
                 incidencia.setLatitud(binding.txtLatitud.getText().toString());
                 incidencia.setLongitud(binding.txtLongitud.getText().toString());
-                incidencia.setProblema(binding.txtDescripcio.getText().toString());
+                incidencia.setProblema(binding.txtDescripcion.getText().toString());
                 incidencia.setUrl(randomName);
                 DatabaseReference base = FirebaseDatabase.getInstance(
                 ).getReference();
@@ -171,6 +168,7 @@ public class AddReport extends Fragment {
             }
         } else {
             //below android 11
+            int PERMISSION_REQUEST_CODE = 1;
             ActivityCompat.requestPermissions(getActivity(), new String[]{WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
         }
     }
@@ -192,6 +190,7 @@ public class AddReport extends Fragment {
             FirebaseStorage storage = FirebaseStorage.getInstance();
             storageRef = storage.getReferenceFromUrl("gs://losting2-0.appspot.com/");
             randomName = UUID.randomUUID().toString();
+            Log.e("NAMENAME",randomName);
             ref = storageRef.child("publicaciones/"+randomName);
 
             if (requestCode == RESULT_LOAD_IMG && resultCode == RESULT_OK
@@ -205,9 +204,9 @@ public class AddReport extends Fragment {
 
                 int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
 
-                imgDecodableString = cursor.getString(columnIndex);
+                String imgDecodableString = cursor.getString(columnIndex);
 
-                mCurrentPhotoPath = cursor.getString(columnIndex);
+                String mCurrentPhotoPath = cursor.getString(columnIndex);
 
                 File uriFile = new File(mCurrentPhotoPath);
                 photoURI = Uri.fromFile(uriFile);
@@ -217,10 +216,9 @@ public class AddReport extends Fragment {
 
                 cursor.close();
 
-                iv = getView().findViewById(R.id.ivHolder);
+                ImageView iv = getView().findViewById(R.id.ivHold);
                 // Set the Image in ImageView after decoding the String
-                iv.setImageBitmap(BitmapFactory
-                        .decodeFile(imgDecodableString));
+                iv.setImageBitmap(BitmapFactory.decodeFile(imgDecodableString));
 
             } else {
                 Toast.makeText(getContext(), "No escogiste ninguna imagen",

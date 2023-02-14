@@ -1,9 +1,11 @@
 package com.example.losting20.ui.dashboard;
 
+import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListAdapter;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -11,11 +13,10 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-import com.example.losting20.Incidencia;
 import com.example.losting20.SharedViewModel;
+import com.example.losting20.databinding.CentrosRowBinding;
 import com.example.losting20.databinding.FragmentDashboardBinding;
-import com.example.losting20.databinding.NotificationsRowBinding;
+import com.example.losting20.ui.Centros;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.auth.FirebaseUser;
@@ -26,18 +27,16 @@ public class DashboardFragment extends Fragment {
 
     private FragmentDashboardBinding binding;
     private FirebaseUser authUser;
-    private String imagen = "https://firebasestorage.googleapis.com/v0/b/losting2-0.appspot.com/o/publicaciones%2F527073d7-b298-46b6-8efa-0c9a9243e5f7?alt=media&token=";
 
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-        DashboardViewModel dashboardViewModel =
-                new ViewModelProvider(this).get(DashboardViewModel.class);
-        SharedViewModel sharedViewModel = new ViewModelProvider(
-                requireActivity()
-        ).get(SharedViewModel.class);
 
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        DashboardViewModel dashboardViewModel = new ViewModelProvider(this).get(DashboardViewModel.class);
+
+        SharedViewModel sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
 
         binding = FragmentDashboardBinding.inflate(inflater, container, false);
+        View root = binding.getRoot();
+
         sharedViewModel.getUser().observe(getViewLifecycleOwner(), user -> {
             authUser = user;
 
@@ -46,66 +45,114 @@ public class DashboardFragment extends Fragment {
 
                 DatabaseReference users = base.child("users");
                 DatabaseReference uid = users.child(authUser.getUid());
-                DatabaseReference incidencies = uid.child("reportes");
+                DatabaseReference centros = uid.child("reportes");
 
-                FirebaseRecyclerOptions<Incidencia> options = new FirebaseRecyclerOptions.Builder<Incidencia>()
-                        .setQuery(incidencies, Incidencia.class)
+                FirebaseRecyclerOptions<Centros> options = new FirebaseRecyclerOptions.Builder<Centros>()
+                        .setQuery(centros, Centros.class)
                         .setLifecycleOwner(this)
                         .build();
 
-                IncidenciaAdapter adapter = new IncidenciaAdapter(options);
+                CentroAdapter adapter = new CentroAdapter(options);
 
-                binding.rvIncidencies.setAdapter(adapter);
-                binding.rvIncidencies.setLayoutManager(new LinearLayoutManager(requireContext())
-                );
-                return;
+                binding.lvCentros.setAdapter(adapter);
+                binding.lvCentros.setLayoutManager(new LinearLayoutManager(requireContext()));
+
             }
+
+                DatabaseReference base = FirebaseDatabase.getInstance(
+                ).getReference();
+
+                Centros centros = new Centros();
+                centros.setDireccio("Gran Vía del Marqués del Turia, 58, 8");
+                centros.setLatitud("39.467462091614586");
+                centros.setLongitud("-0.36750803491229983");
+
+                DatabaseReference users = base.child("users");
+                DatabaseReference uid = users.child(authUser.getUid());
+                DatabaseReference incidencies = uid.child("Centros");
+
+                DatabaseReference reference = incidencies.push();
+                reference.setValue(centros);
+
         });
-        View root = binding.getRoot();
         return root;
     }
+
+    public class CentroAdapter extends FirebaseRecyclerAdapter<Centros, DashboardFragment.CentroAdapter.CentroViewHolder> implements ListAdapter {
+        public CentroAdapter(@NonNull FirebaseRecyclerOptions<Centros> options) {
+            super(options);
+        }
+
+        @Override
+        protected void onBindViewHolder(@NonNull CentroViewHolder holder, int position, @NonNull Centros model) {
+            holder.binding.txtDescripcion.setText(model.getDireccio());
+        }
+
+        @NonNull
+        @Override
+        public DashboardFragment.CentroAdapter.CentroViewHolder onCreateViewHolder(
+                @NonNull ViewGroup parent, int viewType
+        ) {
+            return new CentroViewHolder(CentrosRowBinding.inflate(
+                    LayoutInflater.from(parent.getContext()),
+                    parent, false));
+        }
+
+        @Override
+        public boolean areAllItemsEnabled() {
+            return false;
+        }
+
+        @Override
+        public boolean isEnabled(int i) {
+            return false;
+        }
+
+        @Override
+        public void registerDataSetObserver(DataSetObserver dataSetObserver) {
+
+        }
+
+        @Override
+        public void unregisterDataSetObserver(DataSetObserver dataSetObserver) {
+
+        }
+
+        @Override
+        public int getCount() {
+            return 0;
+        }
+
+        @Override
+        public View getView(int i, View view, ViewGroup viewGroup) {
+            return null;
+        }
+
+        @Override
+        public int getViewTypeCount() {
+            return 0;
+        }
+
+        @Override
+        public boolean isEmpty() {
+            return false;
+        }
+
+        public class CentroViewHolder extends RecyclerView.ViewHolder {
+            public CentrosRowBinding binding;
+
+            public CentroViewHolder(CentrosRowBinding binding) {
+                super(binding.getRoot());
+                this.binding = binding;
+            }
+        }
+    }
+
+
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
-    }
-
-    class IncidenciaAdapter extends FirebaseRecyclerAdapter<Incidencia, IncidenciaAdapter.IncidenciaViewholder> {
-        public IncidenciaAdapter(@NonNull FirebaseRecyclerOptions<Incidencia> options) {
-            super(options);
-        }
-
-        @Override
-        protected void onBindViewHolder(
-                @NonNull IncidenciaViewholder holder, int position, @NonNull Incidencia model
-        ) {
-            holder.binding.txtDescripcio.setText(model.getProblema());
-            holder.binding.txtAdreca.setText(model.getDireccio());
-            try{
-                Glide.with(getContext()).load(imagen + model.getUrl().toString()).into(holder.binding.ivArticulo);
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-        }
-
-        @NonNull
-        @Override
-        public IncidenciaViewholder onCreateViewHolder(
-                @NonNull ViewGroup parent, int viewType
-        ) {
-            return new IncidenciaViewholder(NotificationsRowBinding.inflate(
-                    LayoutInflater.from(parent.getContext()),
-                    parent, false));
-        }
-
-        class IncidenciaViewholder extends RecyclerView.ViewHolder {
-            NotificationsRowBinding binding;
-
-            public IncidenciaViewholder(NotificationsRowBinding binding) {
-                super(binding.getRoot());
-                this.binding = binding;
-            }
-        }
     }
 }

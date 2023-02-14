@@ -18,6 +18,7 @@ import com.example.losting20.API.ValenBisiAPI;
 import com.example.losting20.Incidencia;
 import com.example.losting20.R;
 import com.example.losting20.databinding.FragmentNotificationsBinding;
+import com.example.losting20.ui.Centros;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -49,6 +50,7 @@ public class NotificationsFragment extends Fragment {
     private final DatabaseReference users = base.child("users");
     private final DatabaseReference uid = users.child(auth.getUid());
     private final DatabaseReference incidencies = uid.child("reportes");
+    private final DatabaseReference centros = uid.child("Centros");
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -107,6 +109,41 @@ public class NotificationsFragment extends Fragment {
                 m.setSnippet(incidencia.getProblema());
                 binding.map.getOverlays().add(m);
 
+
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        centros.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                Centros centros = snapshot.getValue(Centros.class);
+                Marker m = new Marker(binding.map);
+                m.setPosition(new GeoPoint(Double.parseDouble(centros.getLatitud()), Double.parseDouble(centros.getLongitud())));
+                m.setTextLabelFontSize(40);
+                m.setIcon(getResources().getDrawable(R.drawable.ic_baseline_verified_24));
+                m.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_TOP);
+                m.setTitle(centros.getDireccio());
+                binding.map.getOverlays().add(m);
             }
 
             @Override

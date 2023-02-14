@@ -103,7 +103,7 @@
             app:layout_constraintVertical_bias="0.04000002">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/txtDescripcio"
+                android:id="@+id/txtDescripcion"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Descripcion" />
@@ -134,7 +134,7 @@
             app:layout_constraintVertical_bias="0.01999998" />
 
         <ImageView
-            android:id="@+id/ivHolder"
+            android:id="@+id/ivHold"
             android:layout_width="137dp"
             android:layout_height="115dp"
             android:src="@drawable/ic_baseline_photo_size_select_actual_24"
