@@ -128,10 +128,10 @@
             android:text="NOTIFICAR"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.053"
+            app:layout_constraintHorizontal_bias="0.05"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/button_foto"
-            app:layout_constraintVertical_bias="0.01999998" />
+            app:layout_constraintVertical_bias="0.193" />
 
         <ImageView
             android:id="@+id/ivHold"
@@ -144,5 +144,17 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textInputLayout3"
             app:layout_constraintVertical_bias="0.04000002" />
+
+        <Button
+            android:id="@+id/btPermisos"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Permisos"
+            app:layout_constraintBottom_toTopOf="@+id/button_notificar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.047"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/button_foto"
+            app:layout_constraintVertical_bias="0.0" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

@@ -56,21 +56,16 @@ import java.util.concurrent.Executors;
 
 public class AddReport extends Fragment {
 
-    private FragmentAddReportBinding binding;
-
-    private FirebaseUser authUser;
-    public static int RESULT_LOAD_IMG=2;
+    public static int RESULT_LOAD_IMG = 2;
     public StorageReference storageRef;
+    private FragmentAddReportBinding binding;
+    private FirebaseUser authUser;
     private String randomName;
     private StorageReference ref;
     private Uri photoURI;
     private String calle;
     private Boolean bimgen = false;
 
-
-    public AddReport() {
-
-    }
 
     public static AddReport newInstance(String param1, String param2) {
         AddReport fragment = new AddReport();
@@ -99,7 +94,6 @@ public class AddReport extends Fragment {
         sharedViewModel.getCurrentLatLng().observe(getViewLifecycleOwner(), latlng -> {
             binding.txtLatitud.setText(String.valueOf(latlng.latitude));
             binding.txtLongitud.setText(String.valueOf(latlng.longitude));
-
             binding.txtDireccio.setText(fetchAddress());
         });
 
@@ -109,9 +103,9 @@ public class AddReport extends Fragment {
             authUser = user;
         });
         binding.buttonNotificar.setOnClickListener(button -> {
-            if(bimgen == true){
+            if (bimgen == true) {
                 Incidencia incidencia = new Incidencia();
-                incidencia.setDireccio(fetchAddress().toString());
+                incidencia.setDireccio(fetchAddress());
                 incidencia.setLatitud(binding.txtLatitud.getText().toString());
                 incidencia.setLongitud(binding.txtLongitud.getText().toString());
                 incidencia.setProblema(binding.txtDescripcion.getText().toString());
@@ -128,7 +122,7 @@ public class AddReport extends Fragment {
                 uploadImag();
                 NavHostFragment.findNavController(AddReport.this).navigate(R.id.action_addReport_to_navigation_home);
                 Toast.makeText(getContext(), "Notificado correctamente", Toast.LENGTH_LONG).show();
-            }else {
+            } else {
                 Toast.makeText(getContext(), "No escogiste ninguna imagen", Toast.LENGTH_LONG).show();
             }
         });
@@ -136,7 +130,7 @@ public class AddReport extends Fragment {
         return root;
     }
 
-    public void onViewCreated(@NonNull View view, Bundle savedInstanceState){
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         binding.backButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -144,22 +138,28 @@ public class AddReport extends Fragment {
                 NavHostFragment.findNavController(AddReport.this).navigate(R.id.action_addReport_to_navigation_home);
             }
         });
+        binding.btPermisos.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                requestPermission();
+            }
+        });
         binding.buttonFoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //requestPermission();
                 bimgen = true;
                 loadimageFromGallery();
             }
         });
     }
+
     //PERMISOS GALERIA
     private void requestPermission() {
         if (SDK_INT >= Build.VERSION_CODES.R) {
             try {
                 Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
                 intent.addCategory("android.intent.category.DEFAULT");
-                intent.setData(Uri.parse(String.format("package:%s",getActivity().getPackageName())));
+                intent.setData(Uri.parse(String.format("package:%s", getActivity().getPackageName())));
                 startActivityForResult(intent, 2296);
             } catch (Exception e) {
                 Intent intent = new Intent();
@@ -174,14 +174,15 @@ public class AddReport extends Fragment {
     }
 
     //Galeria
-    public void loadimageFromGallery(){
-            //Create intent
-            Intent galleryIntent = new Intent(Intent.ACTION_PICK,
-                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+    public void loadimageFromGallery() {
+        //Create intent
+        Intent galleryIntent = new Intent(Intent.ACTION_PICK,
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 
-            //Start Intent
-            startActivityForResult(galleryIntent, RESULT_LOAD_IMG);
+        //Start Intent
+        startActivityForResult(galleryIntent, RESULT_LOAD_IMG);
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -190,8 +191,8 @@ public class AddReport extends Fragment {
             FirebaseStorage storage = FirebaseStorage.getInstance();
             storageRef = storage.getReferenceFromUrl("gs://losting2-0.appspot.com/");
             randomName = UUID.randomUUID().toString();
-            Log.e("NAMENAME",randomName);
-            ref = storageRef.child("publicaciones/"+randomName);
+            Log.e("NAMENAME", randomName);
+            ref = storageRef.child("publicaciones/" + randomName);
 
             if (requestCode == RESULT_LOAD_IMG && resultCode == RESULT_OK
                     && null != data) {
@@ -212,7 +213,7 @@ public class AddReport extends Fragment {
                 photoURI = Uri.fromFile(uriFile);
                 storageRef.putFile(photoURI);
 
-                Log.e("PATH" , cursor.getString(columnIndex));
+                Log.e("PATH", cursor.getString(columnIndex));
 
                 cursor.close();
 
@@ -227,7 +228,7 @@ public class AddReport extends Fragment {
         } catch (Exception e) {
             Toast.makeText(getContext(), "Algo ha salido mal", Toast.LENGTH_LONG)
                     .show();
-            Log.e("ERROR URI", e+"");
+            Log.e("ERROR URI", e + "");
         }
     }
 
@@ -281,7 +282,7 @@ public class AddReport extends Fragment {
         return calle;
     }
 
-    private void uploadImag(){
+    private void uploadImag() {
         ref.putFile(photoURI).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -290,14 +291,14 @@ public class AddReport extends Fragment {
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Toast.makeText(getContext(),"Failed " + e.getMessage(),Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Failed " + e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
                 ProgressDialog progressDialog = new ProgressDialog(getContext());
                 double progress = (100.0 * snapshot.getBytesTransferred() / snapshot.getTotalByteCount());
-                progressDialog.setMessage("Uploaded " + (int)progress + "%");
+                progressDialog.setMessage("Uploaded " + (int) progress + "%");
             }
         });
     }

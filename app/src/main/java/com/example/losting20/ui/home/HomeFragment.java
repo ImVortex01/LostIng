@@ -60,14 +60,16 @@ public class HomeFragment extends Fragment {
                         .setLifecycleOwner(this)
                         .build();
 
-                HomeFragment.IncidenciaAdapter adapter = new HomeFragment.IncidenciaAdapter(options);
+                IncidenciaAdapter adapter = new IncidenciaAdapter(options);
 
                 binding.lvArticulos.setAdapter(adapter);
-                binding.lvArticulos.setLayoutManager(new GridLayoutManager(requireContext(), 3));
-
+                binding.lvArticulos.setLayoutManager(
+                        new GridLayoutManager(requireContext(), 3)
+                );
+                return;
             }
-
         });
+
         return root;
     }
 

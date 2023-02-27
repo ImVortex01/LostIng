@@ -14,6 +14,9 @@
             android:id="@+id/action_navigation_home_to_addReport"
             app:destination="@id/addReport"
             app:popUpToInclusive="false" />
+        <action
+            android:id="@+id/action_navigation_home_self"
+            app:destination="@id/navigation_home" />
     </fragment>
 
     <fragment

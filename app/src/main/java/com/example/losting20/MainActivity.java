@@ -41,7 +41,6 @@ public class MainActivity extends AppCompatActivity {
     private SharedViewModel sharedViewModel;
     private ActivityResultLauncher<Intent> signInLauncher;
     private ActivityResultLauncher<String[]> locationPermissionRequest;
-
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {

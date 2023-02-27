@@ -28,7 +28,6 @@ public class DashboardFragment extends Fragment {
     private FragmentDashboardBinding binding;
     private FirebaseUser authUser;
 
-
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         DashboardViewModel dashboardViewModel = new ViewModelProvider(this).get(DashboardViewModel.class);
 
@@ -45,7 +44,7 @@ public class DashboardFragment extends Fragment {
 
                 DatabaseReference users = base.child("users");
                 DatabaseReference uid = users.child(authUser.getUid());
-                DatabaseReference centros = uid.child("reportes");
+                DatabaseReference centros = uid.child("Centros");
 
                 FirebaseRecyclerOptions<Centros> options = new FirebaseRecyclerOptions.Builder<Centros>()
                         .setQuery(centros, Centros.class)
@@ -59,7 +58,7 @@ public class DashboardFragment extends Fragment {
 
             }
 
-                DatabaseReference base = FirebaseDatabase.getInstance(
+               /* DatabaseReference base = FirebaseDatabase.getInstance(
                 ).getReference();
 
                 Centros centros = new Centros();
@@ -73,7 +72,7 @@ public class DashboardFragment extends Fragment {
 
                 DatabaseReference reference = incidencies.push();
                 reference.setValue(centros);
-
+*/
         });
         return root;
     }

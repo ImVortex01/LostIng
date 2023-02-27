@@ -7,8 +7,8 @@
 
     <TextView
         android:id="@+id/txtDescripcion"
-        android:layout_width="202dp"
-        android:layout_height="48dp"
+        android:layout_width="229dp"
+        android:layout_height="55dp"
         android:background="#33393939"
         android:ellipsize="end"
         android:maxLines="2"
@@ -16,15 +16,15 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.083"
+        app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0" />
 
     <TextView
         android:id="@+id/textView"
-        android:layout_width="394dp"
-        android:layout_height="18dp"
+        android:layout_width="395dp"
+        android:layout_height="24dp"
         app:layout_constraintBottom_toTopOf="@+id/txtDescripcion"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

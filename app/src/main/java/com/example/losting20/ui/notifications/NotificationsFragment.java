@@ -1,12 +1,15 @@
 package com.example.losting20.ui.notifications;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,6 +17,9 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.example.losting20.API.ValenBisiAPI;
 import com.example.losting20.Incidencia;
 import com.example.losting20.R;
@@ -30,6 +36,7 @@ import org.osmdroid.api.IMapController;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
+import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.compass.CompassOverlay;
 import org.osmdroid.views.overlay.compass.InternalCompassOrientationProvider;
@@ -43,7 +50,6 @@ import retrofit2.converter.jackson.JacksonConverterFactory;
 
 public class NotificationsFragment extends Fragment {
 
-    private FragmentNotificationsBinding binding;
     private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
     private final FirebaseAuth auth = FirebaseAuth.getInstance();
     private final DatabaseReference base = FirebaseDatabase.getInstance().getReference();
@@ -51,6 +57,7 @@ public class NotificationsFragment extends Fragment {
     private final DatabaseReference uid = users.child(auth.getUid());
     private final DatabaseReference incidencies = uid.child("reportes");
     private final DatabaseReference centros = uid.child("Centros");
+    private FragmentNotificationsBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -99,6 +106,7 @@ public class NotificationsFragment extends Fragment {
         incidencies.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
                 Incidencia incidencia = snapshot.getValue(Incidencia.class);
                 Marker m = new Marker(binding.map);
                 m.setPosition(new GeoPoint(Double.parseDouble(incidencia.getLatitud()), Double.parseDouble(incidencia.getLongitud())));
@@ -107,29 +115,44 @@ public class NotificationsFragment extends Fragment {
                 m.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_TOP);
                 m.setTitle(incidencia.getDireccio());
                 m.setSnippet(incidencia.getProblema());
+                m.setOnMarkerClickListener(new Marker.OnMarkerClickListener() {
+                    @Override
+                    public boolean onMarkerClick(Marker marker, MapView mapView) {
+                        String imagen = "https://firebasestorage.googleapis.com/v0/b/losting2-0.appspot.com/o/publicaciones%2F";
+                        Glide.with(getContext()).load(imagen + incidencia.getUrl() + "?alt=media&token=" + incidencia.getUrl()).into(new SimpleTarget<Drawable>() {
+                            @Override
+                            public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                                // Aquí se carga la imagen en un ImageView
+                                ImageView imageView = new ImageView(getContext());
+                                imageView.setImageDrawable(resource);
+
+                                // Aquí se muestra la imagen en un diálogo
+                                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                                builder.setView(imageView);
+                                builder.setTitle(incidencia.getDireccio());
+                                builder.create().show();
+                            }
+                        });
+                        return true;
+                    }
+                });
                 binding.map.getOverlays().add(m);
-
-
             }
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
             }
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-
             }
 
             @Override
             public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
             }
         });
 
@@ -148,22 +171,18 @@ public class NotificationsFragment extends Fragment {
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
             }
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-
             }
 
             @Override
             public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
             }
         });
     }//OnViewCreated
@@ -212,7 +231,6 @@ public class NotificationsFragment extends Fragment {
                     REQUEST_PERMISSIONS_REQUEST_CODE);
         }
     }//requestPermisionsIfNecessary
-
 
     @Override
     public void onDestroyView() {
